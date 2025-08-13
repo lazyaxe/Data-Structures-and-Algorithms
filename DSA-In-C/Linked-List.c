@@ -73,8 +73,12 @@ void insert_node(int input_value, int index)// Index of 0 to n-1
 {
     Node *temp= (Node*)malloc(sizeof(Node));
     temp->value=input_value;
-    temp->next_node_reference=head_pointer;
-    if(index==1)
+    temp->next_node_reference=head_pointer;//the temp struct points to head_pointer's reference i.e. first node
+    if(index<0)
+    {
+        printf("Error. Invaild index value");
+    }
+    else if(index==1)
     {
         /*
             Here the head copies the head_pointer's refernce i.e. address of the first_node.
@@ -82,14 +86,14 @@ void insert_node(int input_value, int index)// Index of 0 to n-1
             [head_pointer]-->[node_1]-->[node_2]-->[node_3]-->[node_4]<--[tail_pointer]
                                 ^                                  |
                                 |                                  V
-                            [temp(pointer)]                       NULL
+                                |                                  NULL
+                            [temp(basically a struct controlled by a pointer)]
         */
        head_pointer=temp;
     }
     else if(index!=1)
     {
-        Node *cursor= (Node*)malloc(sizeof(Node));
-        cursor=head_pointer;
+        Node *cursor = head_pointer;
         /*
             INDEX:              0          1          2          3
             [head_pointer]-->[node_1]-->[node_2]-->[node_3]-->[node_4]<--[tail_pointer]
@@ -267,15 +271,16 @@ void delete_node(int index)
     }
     else
     {
-        Node *deletion_node_reference=head_pointer;
+        cursor=head_pointer;
+        Node *deletion_node=head_pointer;
         for(int i=0; i<index-1; i++)
         {
             cursor=cursor->next_node_reference;
         }
-        deletion_node_reference=cursor->next_node_reference;//deletion_node_reference goes one Node further i.e the Node we want to delete.
+        deletion_node=cursor->next_node_reference;//deletion_node goes one Node further i.e the Node we want to delete.
 
-        cursor->next_node_reference=deletion_node_reference->next_node_reference;
-        deletion_node_reference->next_node_reference=NULL;
+        cursor->next_node_reference=deletion_node->next_node_reference;
+        deletion_node->next_node_reference=NULL;
 
         /*
             INDEX:                   0           1          2          3
@@ -306,7 +311,7 @@ void delete_node(int index)
 
 
         */
-       free(deletion_node_reference);
+       free(deletion_node);
     }
 
 }
