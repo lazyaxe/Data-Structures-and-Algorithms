@@ -35,26 +35,26 @@ bool isQueueEmpty()
         return false;
     }
 }
-void EnQueue(int input_value)
+void EnQueue(int InputValue)
 {
-
-    if(isQueueEmpty())
+    if (isQueueFull()) 
     {
-        rear++;
-        front=rear;
-        Queue[rear]=input_value;
-
+        printf("\nQueue is full, can't EnQueue %d.\n", InputValue);
+        return;
     }
-    else if(isQueueFull())
+
+    if (isQueueEmpty())
     {
-        printf("\nQueue is full, can't EnQueue %d.\n", input_value);
+        front = rear = 0;
     }
     else
     {
-         rear++;
-         Queue[rear]=input_value;
+        rear++;
     }
+
+    Queue[rear] = InputValue;
 }
+
 
 void DeQueue()
 {
