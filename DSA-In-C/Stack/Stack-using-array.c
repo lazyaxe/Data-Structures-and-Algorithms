@@ -1,7 +1,7 @@
-//STACK C IMPLEMENTATION
+//Stack C IMPLEMENTATION
 /*
-~>Stack is an abstract data type, that behaves like the real world stack.
-~>Stack Data Structure(SDS), follows LIFO(Last-In-First-Out) order, where the element which is the latest insert is the first to be removed removed.
+    ~>Stack is an abstract data type, that behaves like the real world stack.
+    ~>Stack Data Structure(SDS), follows LIFO(Last-In-First-Out) order, where the element which is the latest insert is the first to be removed.
 */
 
 /*
@@ -13,22 +13,22 @@ Basic Operations of stack:
 */
 
 #include <stdio.h>
-#define SIZE 2
+#define SIZE 2 //Change the size of Stack here
 
 //initializing top to be -1, beacuse stack is empty
-int top=-1;//top counter will do the appending of new items.
-int STACK[SIZE];
+int top=-1;//top counter will do the appending & the deletion
+int Stack[SIZE];
 
 //push operation: inserstion at the last index of an array/append
 void push(int value)
 {
-    //CASE 1: The first element/item
+    //EDGE CASE 1: The first element/item
     if(top==-1)
     {
         top=0;
         printf("push: %d.\n", value);
     }
-    //CASE 2: stack is full
+    //EDGE CASE 2: stack is full
     else if(top==SIZE-1)
     {
         printf("%d can't be pushed.\n", value);
@@ -42,7 +42,7 @@ void push(int value)
         top++;
     }
     //Appending/Insertion logic .i.e. simply arrray element initalization
-    STACK[top]=value;
+    Stack[top]=value;
     return;
 }
 
@@ -55,7 +55,7 @@ void pop()
         printf("The stack is empty.\n");
         return;
     }
-    printf("pop: %d\n", STACK[top]);
+    printf("pop: %d\n", Stack[top]);
     top--;
     return;
 }
@@ -75,10 +75,10 @@ void peep(int index)
         printf("%d index is out of range\n", index);
         return;
     }
-    printf("peep: %d, index: %d\n", STACK[index], index);
+    printf("peep: %d, index: %d\n", Stack[index], index);
 }
 
-void change(int value, int index)
+void change(int new_value, int index)
 {
     //EDGE CASE 1: If stack is empty
     if(top==-1)
@@ -92,8 +92,8 @@ void change(int value, int index)
         printf("%d index is out of range\n", index);
         return;
     }
-    STACK[index]=value;
-    printf("change: %d, index: %d\n", STACK[index], index);
+    Stack[index]=new_value;
+    printf("change: %d, index: %d\n", Stack[index], index);
 }
 void user_input_stack_operations()
 {
@@ -137,16 +137,6 @@ void user_input_stack_operations()
 }
 int main()
 {
-    user_input_stack_operations();
-    pop();
-    push(40);
-    push(10);
-    push(20);
-    pop();
-    pop();
-    pop();
-    pop();
-    change(0, 8);
-    peep(5);   
+    user_input_stack_operations(); 
     return 0;
 }
