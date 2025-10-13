@@ -15,9 +15,9 @@ Node* create_new_node(int input_value)
     Node* temp= (Node*)malloc(sizeof(Node));
     if(temp!=NULL)
     {
-        temp->key=input_value;
-        temp->left_node=NULL;
-        temp->right_node=NULL;
+        temp->key = input_value;
+        temp->left_node = NULL;
+        temp->right_node = NULL;
         return temp;
     }
     else
@@ -71,15 +71,14 @@ Node* insert_node(Node *cursor,  int input_value)
             cursor->right_node = insert_node(cursor->right_node, input_value);
             printf("\n%d inserted in right sub-tree.\n", input_value);
         }
+        //during unwinding of recursion 
+        return cursor;
     }
-
-    //during unwinding the 
-    return cursor;
 }
 
 Node* search_node(Node *cursor, int key)
 {
-    if(cursor==NULL)
+    if(cursor == NULL)
     {
         return NULL;
     }
@@ -110,7 +109,7 @@ Node* find_min_node(Node *cursor)
 
 Node* find_max_node(Node *cursor)
 {
-    if(cursor==NULL)
+    if(cursor == NULL)
     {
         return cursor;
     }
@@ -142,7 +141,7 @@ Node* find_min_node_iterative(Node *cursor)
 
 Node* find_max_node_iterative(Node *cursor)
 {
-    if(cursor==NULL)
+    if(cursor == NULL)
     {
         return cursor;
     }
@@ -178,7 +177,7 @@ Node* delete_node(Node* cursor, int input_value)
         {
             /*
                 Recursive Code:
-                    ~> The cursor first will be at root node since cursor = temp
+                    ~> The cursor initially will be at root node.
                     ~> A comparision by if condition will be made to see if insert key is smaller than the root node or not.
 
                     If Condition is true:
@@ -207,7 +206,6 @@ Node* delete_node(Node* cursor, int input_value)
             if(cursor->left_node == NULL && cursor->right_node == NULL)
             {
                 printf("\n%d, leaf node\n", input_value);
-
                 free(cursor);
             }
 
@@ -226,28 +224,26 @@ Node* delete_node(Node* cursor, int input_value)
                 printf("\n%d, non-leaf node w/ one child node \n", input_value);
                 free(temp_cursor);
             }
-            
-            //CASE 3: If it's a non-lead node (w/ two child nodes)
+
+            //CASE 3: If it's a non-leaf node (w/ two child nodes)
             else
             {
                 //By using inorder successor
                 printf("\n%d, non-leaf node w/ two child nodes \n", input_value);
                 Node* inorder_successor = find_min_node(cursor->right_node);
                 cursor->key = inorder_successor->key;
-
-                free(inorder_successor);
-
+                
+                cursor->right_node = delete_node(cursor->right_node, inorder_successor->key);
                 /*
                     //If you want inorder predecessor:
                     Node* inorder_predessor = find_max_node(cursor->right_node);
                     cursor->key = inorder_predessor->key;
-                    free(inorder_predessor);
+                    cursor->left_node=delete_node(cursor->right_node, inorder_successor->key);;
                 */
             }
             return cursor;
         }
     }
-
 }
 
 
@@ -266,10 +262,10 @@ int main()
     root = insert_node(root, 13);
     root = insert_node(root, 89);
     find_max_node(root);
-    find_max_node_iterative(root);
     find_min_node(root);
-    find_min_node_iterative(root);
     delete_node(root, 89);
+    find_min_node_iterative(root);
+    find_max_node_iterative(root);
 
     return 0;
 }
