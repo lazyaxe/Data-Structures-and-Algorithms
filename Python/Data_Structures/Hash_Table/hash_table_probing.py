@@ -1,25 +1,29 @@
 #A simple hash table implementation
 def my_hash(value):
     if isinstance(value, int):
-        return value % 67
+        return value % 10
     elif isinstance(value, str):
         sum_of_all_chars = 0
         for char in value:
             #ord helper function converts a char in the string to its corresponding ASCII value
             sum_of_all_chars += ord(char)
-        return sum_of_all_chars % 67
+        return sum_of_all_chars % 10
     else:
         return -1
 
-my_list = [[] for _ in range(101)]
+key_list = [0 for _ in range(10)]
+value_list = [None for _ in range(10)]
 
-print(my_list)
+print(value_list)
 def add_value(value):
     index = my_hash(value)
-    my_list[index].append(value)
+    print(f"Index {index} of {value}")
+    key_list[index] = index
+    value_list[index] = value
 
 add_value("Harsh")
-print(my_list)
+for key, value in zip(key_list, value_list):
+    print(f"{key} : {value}")
 
 
 
@@ -35,7 +39,7 @@ class HashTable:
         self.key_list: list = [0 for _ in range(self.size)]
         self.value_list: list = [None for _ in range(self.size)]
 
-    def first_hash(self, value):
+    def hash(self, value):
             if isinstance(value, int):
                 return value % self.size
 
@@ -53,7 +57,7 @@ class HashTable:
         return abs(hash(value)) % self.size 
 
     def contains(self, value):
-        index = self.first_hash(value)
+        index = self.hash(value)
         if self.value_list[index] == value:
             return True
         else:
@@ -75,7 +79,8 @@ class HashTable:
                 print(f"{value}  placed at index {index}")
                 self.key_list[index] = index
                 self.value_list[index] = value
-                break
+                return
+        print(f"Couldn't place {value}, no spots left")
 
     def quad_probing(self, index, value) -> None:
         for i in range(self.size):
@@ -86,10 +91,11 @@ class HashTable:
                 print(f"{value}  placed at index {index}")
                 self.key_list[index] = index
                 self.value_list[index] = value
-                break
+                return
+        print(f"Couldn't place {value}, no spots left")
 
     def add(self, value):
-        index = self.first_hash(value)
+        index = self.hash(value)
         if self.resolution_method == "linear":
             self.linear_probing(index=index, value=value)
 
@@ -103,7 +109,7 @@ class HashTable:
                 self.linear_probing(index=index, value=value)
 
     def find(self, value):
-        index = self.first_hash(value)
+        index = self.hash(value)
         if self.value_list[index] == value:
             return index
 
@@ -126,43 +132,58 @@ class HashTable:
 
     def modify(self, value, new_value):
         if self.contains(value):
-            index = self.first_hash(value)
+            index = self.hash(value)
+
+            #removing the old key:value pair
             self.value_list[index] = None
-            self.key_list[index] = None
+            self.key_list[index] = 0
+
+            print(f"Modified {value} to {new_value}")
             self.add(new_value)
+
         else:
-            print(f"Can't modify as the value, {value} doesn't exist!")
+            print(f"Can't modify as value, {value} as it doesn't exist!")
+
     def display(self):
-        for i in range(self.size):
-            print(f"index: {i}: {self.key_list[i]} -> {self.value_list[i]}", end="\n")
+        print("{", end="")
+        for key, value in zip(self.key_list, self.value_list):
+            print(f"[{key} : {value}]")
+        print("}", end="")
+        print()
 
+if __name__ == "__main__":
+    ht = HashTable(7, resolution_method='quad')
 
-ht = HashTable(7, resolution_method='quad')
+    ht.add("Python")
+    print(ht.hash("Python"), end="\n\n")
 
-ht.add("Python")
-print(ht.first_hash("Python"), end="\n\n")
+    ht.add("Sukuna")
+    print(ht.hash("Sukuna"), end="\n\n")
 
-ht.add("Sukuna")
-print(ht.first_hash("Sukuna"), end="\n\n")
+    ht.add("Megumi")
+    print(ht.hash("Megumi"), end="\n\n")
 
-ht.add("Megumi")
-print(ht.first_hash("Megumi"), end="\n\n")
+    ht.add("Itadori")
+    print(ht.hash("Itadori"), end="\n\n")
 
-ht.add("Itadori")
-print(ht.first_hash("Itadori"), end="\n\n")
+    ht.add(48487)
+    print(ht.hash(48487), end="\n\n")
 
-ht.add(48487)
-print(ht.first_hash(48487), end="\n\n")
+    ht.add("Jotaro")
+    print(ht.hash("DIO"), end="\n\n")
 
-ht.add("Jotaro")
-print(ht.first_hash("DIO"), end="\n\n")
+    ht.add("Light")
+    print(ht.hash("Light"), end="\n\n")
 
-ht.modify("Itadori", "Itachi")
-print(ht.first_hash("Itachi"), end="\n\n")
+    ht.modify("Itadori", "Itachi")
+    print(ht.hash("Itachi"), end="\n\n")
 
-ht.add("Light")
-print(ht.first_hash("Light"), end="\n\n")
+    ht.display()
 
-ht.display()
+    #trying to place an value after Table is full
+    ht.add("Harsh")
+    print(ht.hash("Harsh"), end="\n\n")
 
-print(ht.find("Light"))
+    ht.display()
+
+    print(ht.find("Light"))
