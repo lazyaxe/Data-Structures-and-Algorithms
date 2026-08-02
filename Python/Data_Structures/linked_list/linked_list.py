@@ -33,30 +33,61 @@ class LinkedList:
             cursor_node.next = new_node
             self.nodes += 1
 
+    def find(self, value):
+        cursor_node = self.head
+        index = 0
+        while cursor_node.next is not None:
+            if cursor_node.value == value:
+                return index
+            elif cursor_node.value != value:
+                cursor_node = cursor_node.next
+                index += 1
+        return -1
+
     def display(self):
-        cursor_node = Node(0)
         cursor_node = self.head
         while cursor_node is not None:
             print(f"{cursor_node.value}-->", end="")
             cursor_node = cursor_node.next
-        print("None", end="")
-        print()
+        print("None")
 
-    def delete(self, value, index):
-        cursor = self.head
+    def _delete_with_index(self, index, cursor_node):
+        #delete head and replace it second Node
         if index == 0:
-            self.head = cursor.next
-            cursor.next = None
-        if index > 0:
-            for _ in range(index - 1):
-                cursor = cursor.next
-            deletion = cursor.next
-            cursor.next = deletion.next
-            deletion.next = None
+            self.head = cursor_node.next
+            cursor_node.next = None
 
-lt = LinkedList()
-lt.insert("Apple", 0)
-lt.insert("Banana", 1)
-lt.insert("Coconut", 2)
-lt.insert("Dragon Fruit", 1)
-lt.display()
+        elif index > 0:
+            for _ in range(index - 1):
+                cursor_node = cursor_node.next
+            deletion_node = cursor_node.next
+            cursor_node.next = deletion_node.next
+            deletion_node.next = None
+
+    def _delete_with_value(self, value, cursor_node):
+            #delete head and replace it second Node
+            index = self.find(value=value)
+            self._delete_with_index(index=index, cursor_node=cursor_node)
+
+    def delete(self, value=None, index=None):
+        cursor_node = self.head
+
+        #delete head and replace it second Node
+        if index is not None:
+            self._delete_with_index(index=index, cursor_node=cursor_node)
+
+        elif value is not None:
+            self._delete_with_value(value=value, cursor_node=cursor_node)
+
+if __name__ == "__main__":
+    lt = LinkedList()
+    lt.insert("Apple", 0)
+    lt.insert("Banana", 1)
+    lt.insert("Coconut", 2)
+    lt.insert("Dragon Fruit", 1)
+    lt.display()
+    print(lt.find("Coconut"))
+    lt.delete(index=2)
+    lt.display()
+
+    print(isinstance(lt, LinkedList))
